@@ -1,0 +1,140 @@
+object dmConsultaFechaCaixas: TdmConsultaFechaCaixas
+  OldCreateOrder = False
+  Height = 263
+  Width = 448
+  object fdqConsultaFechaCaixas: TFDQuery
+    Connection = dmPrincipal.conPizzaria
+    SQL.Strings = (
+      'select'
+      '  mc.id,'
+      '  mc.caixa,'
+      '  c.descricao caixa_desc,'
+      '  mc.usuario_abert,'
+      '  u_abert.nome user_abert,'
+      '  mc.valor_abert,'
+      '  mc.data_abert,'
+      '  mc.usuario_fech,'
+      '  u_fech.nome user_fech,'
+      '  mc.valor_fech,'
+      '  mc.data_fech,'
+      '  mc.`status`,'
+      'case '
+      '  when mc.`status` = '#39'A'#39' then '#39'Aberto'#39
+      '  else '#39'Fechado'#39' '
+      'end as abert_fech,'
+      '  (mc.valor_abert + mc.valor_fech) as vl_total'#9#9
+      'from movcaixas mc'
+      'inner join caixas c on c.id = mc.caixa'
+      'inner join usuarios u_abert on u_abert.id = mc.usuario_abert'
+      'left  join usuarios u_fech  on u_fech.id  = mc.usuario_fech'
+      'where mc.id = -1')
+    Left = 96
+    Top = 117
+    object fdqConsultaFechaCaixasid: TFDAutoIncField
+      FieldName = 'id'
+      Origin = 'id'
+      ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
+    end
+    object fdqConsultaFechaCaixascaixa: TIntegerField
+      FieldName = 'caixa'
+      Origin = 'caixa'
+      Required = True
+    end
+    object fdqConsultaFechaCaixascaixa_desc: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'caixa_desc'
+      Origin = 'descricao'
+      ProviderFlags = []
+      ReadOnly = True
+      Size = 80
+    end
+    object fdqConsultaFechaCaixasdata_abert: TDateTimeField
+      AutoGenerateValue = arDefault
+      FieldName = 'data_abert'
+      Origin = 'data_abert'
+    end
+    object fdqConsultaFechaCaixasusuario_abert: TIntegerField
+      FieldName = 'usuario_abert'
+      Origin = 'usuario_abert'
+      Required = True
+    end
+    object fdqConsultaFechaCaixasuser_abert: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'user_abert'
+      Origin = 'nome'
+      ProviderFlags = []
+      ReadOnly = True
+      Size = 100
+    end
+    object fdqConsultaFechaCaixasvalor_abert: TBCDField
+      FieldName = 'valor_abert'
+      Origin = 'valor_abert'
+      Required = True
+      DisplayFormat = '#,###0.00'
+      Precision = 10
+      Size = 2
+    end
+    object fdqConsultaFechaCaixasdata_fech: TDateTimeField
+      FieldName = 'data_fech'
+      Origin = 'data_fech'
+      Required = True
+    end
+    object fdqConsultaFechaCaixasusuario_fech: TIntegerField
+      AutoGenerateValue = arDefault
+      FieldName = 'usuario_fech'
+      Origin = 'usuario_fech'
+    end
+    object fdqConsultaFechaCaixasuser_fech: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'user_fech'
+      Origin = 'nome'
+      ProviderFlags = []
+      ReadOnly = True
+      Size = 100
+    end
+    object fdqConsultaFechaCaixasvalor_fech: TBCDField
+      FieldName = 'valor_fech'
+      Origin = 'valor_fech'
+      Required = True
+      DisplayFormat = '#,###0.00'
+      Precision = 10
+      Size = 2
+    end
+    object fdqConsultaFechaCaixasvl_total: TBCDField
+      AutoGenerateValue = arDefault
+      FieldName = 'vl_total'
+      Origin = 'vl_total'
+      ProviderFlags = []
+      ReadOnly = True
+      DisplayFormat = '#,###0.00'
+      Precision = 11
+      Size = 2
+    end
+    object fdqConsultaFechaCaixasabert_fech: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'abert_fech'
+      Origin = 'abert_fech'
+      ProviderFlags = []
+      ReadOnly = True
+      Size = 7
+    end
+    object fdqConsultaFechaCaixasstatus: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'status'
+      Origin = 'status'
+      FixedChar = True
+      Size = 1
+    end
+  end
+  object dsConsultaFechaCaixas: TDataSource
+    DataSet = fdqConsultaFechaCaixas
+    Left = 328
+    Top = 117
+  end
+  object fdgxwtcrsr1: TFDGUIxWaitCursor
+    Provider = 'Forms'
+    Left = 224
+    Top = 37
+  end
+end

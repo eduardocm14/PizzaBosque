@@ -1,0 +1,71 @@
+program Pizzaria;
+
+uses
+  Vcl.Forms,
+  UfrmLogin in 'frm\UfrmLogin.pas' {frmLogin},
+  UdmPrincipal in 'dm\UdmPrincipal.pas' {dmPrincipal: TDataModule},
+  UfrmPrincipal in 'frm\UfrmPrincipal.pas' {frmPrincipal},
+  uFuncoes in 'unit\uFuncoes.pas',
+  uMensagens in 'unit\uMensagens.pas',
+  UdmUsuarios in 'dm\UdmUsuarios.pas' {dmUsuarios: TDataModule},
+  System.SysUtils,
+  System.UITypes {dmUsuarios: TDataModule},
+  UdmEmpresa in 'dm\UdmEmpresa.pas' {dmEmpresa: TDataModule},
+  UfrmEmpresa in 'frm\UfrmEmpresa.pas' {frmEmpresa},
+  UdmClientes in 'dm\UdmClientes.pas' {dmClientes: TDataModule},
+  UfrmClientes in 'frm\UfrmClientes.pas' {frmClientes},
+  UfrmSabores in 'frm\UfrmSabores.pas' {frmSabores},
+  UdmFormaPgto in 'dm\UdmFormaPgto.pas' {dmFormaPgto: TDataModule},
+  UfrmUsuarios in 'frm\UfrmUsuarios.pas' {frmUsuarios},
+  UdmProdutos in 'dm\UdmProdutos.pas' {dmProdutos: TDataModule},
+  UfrmProdutos in 'frm\UfrmProdutos.pas' {frmProdutos},
+  UdmSabores in 'dm\UdmSabores.pas' {dmSabores: TDataModule},
+  UfrmFormasPgto in 'frm\UfrmFormasPgto.pas' {frmFormasPagto},
+  UdmEntregadores in 'dm\UdmEntregadores.pas' {dmEntregadores: TDataModule},
+  UdmPesqClientesVenda in 'dm\UdmPesqClientesVenda.pas' {dmPesqClientesVenda: TDataModule},
+  UfrmVendas in 'frm\UfrmVendas.pas' {frmVendas},
+  UfrmPesqClientesVenda in 'frm\UfrmPesqClientesVenda.pas' {frmPesqClientesVendas},
+  UfrmPesqCaixas in 'frm\UfrmPesqCaixas.pas' {frmPesqCaixas},
+  UfrmPesqTipoPizza in 'frm\UfrmPesqTipoPizza.pas' {frmPesqTipoPizza},
+  UfrmPesqSabores in 'frm\UfrmPesqSabores.pas' {frmPesqSabores},
+  UfrmPesqCaixaOperador in 'frm\UfrmPesqCaixaOperador.pas' {frmPesqCaixaOperador},
+  UdmAuxiliar2 in 'dm\UdmAuxiliar2.pas' {dmAuxiliar2: TDataModule},
+  UdmVendas in 'dm\UdmVendas.pas' {dmVendas: TDataModule},
+  UfrmTestes in 'frm\UfrmTestes.pas' {frmTestes},
+  UdmCaixas in 'dm\UdmCaixas.pas' {dmCaixas: TDataModule},
+  UfrmAbreCaixas in 'frm\UfrmAbreCaixas.pas' {frmAbreCaixas},
+  UfrmCaixas in 'frm\UfrmCaixas.pas' {frmCaixas},
+  UfrmEntregadores in 'frm\UfrmEntregadores.pas' {frmEntregadores},
+  UfrmConfig in 'frm\UfrmConfig.pas' {frmConfig},
+  UfrmPesqEntregadores in 'frm\UfrmPesqEntregadores.pas' {frmPesqEntregadores},
+  UfrmPesqFormasPgto in 'frm\UfrmPesqFormasPgto.pas' {frmPesqFormasPgto},
+  UfrmPesqCaixasAbertos in 'frm\UfrmPesqCaixasAbertos.pas' {frmPesqCaixasAbertos},
+  UdmAuxiliar in 'dm\UdmAuxiliar.pas' {dmAuxiliar: TDataModule},
+  UfrmIncluirAlterarClientes in 'frm\UfrmIncluirAlterarClientes.pas' {frmIncluirAlterarClientes},
+  UdmConsultaVendas in 'dm\UdmConsultaVendas.pas' {dmConsultaFechaCaixas: TDataModule},
+  UfrmConsultaVendas in 'frm\UfrmConsultaVendas.pas' {frmConsultaVendas},
+  UfrmConsultaVendaProdutos in 'frm\UfrmConsultaVendaProdutos.pas' {frmConsultaVendaProdutos},
+  UdmConsultaVendaProdutos in 'dm\UdmConsultaVendaProdutos.pas' {dmConsultaVendaProdutos: TDataModule},
+  UfrmPadrao in 'frm\UfrmPadrao.pas' {frmPadrao};
+
+{$R *.res}
+
+begin
+  Application.UpdateFormatSettings:=False;
+  FormatSettings.ShortDateFormat := 'DD/MM/YYYY'; // Altera formato da Data
+
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TdmPrincipal, dmPrincipal);
+  Application.CreateForm(TfrmLogin, frmLogin);
+  if frmLogin.ShowModal = mrOk then
+  begin
+    FreeAndNil(frmLogin);
+    Application.CreateForm(TfrmPrincipal, frmPrincipal);
+    Application.Run;
+  end
+  else
+  begin
+    Application.Terminate;
+  end;
+end.

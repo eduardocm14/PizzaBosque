@@ -1,0 +1,173 @@
+unit UfrmConsultaVendas;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Data.DB,
+  Vcl.Grids, Vcl.DBGrids, Vcl.ComCtrls, Vcl.Menus;
+
+type
+  TfrmConsultaVendas = class(TForm)
+    Panel1: TPanel;
+    dbgConsultaCaixas: TDBGrid;
+    rgDataAberFech: TRadioGroup;
+    rgCaixasAbertFech: TRadioGroup;
+    dtpDataInicio: TDateTimePicker;
+    dtpDataFinal: TDateTimePicker;
+    dtpHoraInicio: TDateTimePicker;
+    dtpHoraFinal: TDateTimePicker;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    btnPesquisar: TButton;
+    pmOpcao: TPopupMenu;
+    FecharCaixa1: TMenuItem;
+    N1: TMenuItem;
+    Consultavendasporcaixa1: TMenuItem;
+    procedure FormKeyPress(Sender: TObject; var Key: Char);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure btnPesquisarClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure Consultavendasporcaixa1Click(Sender: TObject);
+    procedure FecharCaixa1Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmConsultaVendas: TfrmConsultaVendas;
+
+implementation
+
+{$R *.dfm}
+
+uses UfrmPadrao, UdmConsultaFechaCaixas, uFuncoes, UfrmConsultaVendaProdutos,
+  uMensagens;
+
+procedure TfrmConsultaVendas.btnPesquisarClick(Sender: TObject);
+var
+  sLcSql1, sLcOpAbertFech,
+  sLcDataInicioFim : string;
+begin
+  sLcSql1 := '';
+  sLcOpAbertFech := '';
+  sLcDataInicioFim := '';
+
+  sLcDataInicioFim := QuotedStr(FormatDateTime('yyyy-mm-dd', dtpDataInicio.Date)) +
+                      QuotedStr(TimeToStr(dtpHoraInicio.Time)) + ' AND ' +
+                      QuotedStr(FormatDateTime('yyyy-mm-dd', dtpDataFinal.Date))  +
+                      QuotedStr(TimeToStr(dtpHoraFinal.Time));
+
+  sGbConsultaVendasDataInicio := FormatDateTime('yyyy-mm-dd', dtpDataInicio.Date) + ' ' +
+                                 TimeToStr(dtpHoraInicio.Time);
+
+  sGbConsultaVendasDataFim    := FormatDateTime('yyyy-mm-dd', dtpDataFinal.Date)  + ' ' +
+                                 TimeToStr(dtpHoraFinal.Time);
+
+  case rgCaixasAbertFech.ItemIndex of
+   0 : sLcOpAbertFech := '''A''';
+   1 : sLcOpAbertFech := '''F''';
+   2 : sLcOpAbertFech := '''A'', ''F''';
+  end;
+
+  sLcSql1 := 'SELECT ' +
+              'MC.ID, MC.CAIXA, C.DESCRICAO CAIXA_DESC, MC.USUARIO_ABERT, ' +
+              'U_ABERT.NOME USER_ABERT, MC.VALOR_ABERT, MC.DATA_ABERT, MC.USUARIO_FECH, ' +
+              'U_FECH.NOME USER_FECH, MC.VALOR_FECH, MC.DATA_FECH, ' +
+              'MC.`STATUS`, ' +
+             'CASE ' +
+              'WHEN MC.`STATUS` = ''A'' THEN ''Aberto'' ' +
+              'ELSE ''Fechado''' +
+             'END AS ABERT_FECH , ' +
+              '(MC.VALOR_ABERT + MC.VALOR_FECH) AS VL_TOTAL ' +
+             'FROM MOVCAIXAS MC ' +
+             'INNER JOIN CAIXAS C ON C.ID = MC.CAIXA ' +
+             'INNER JOIN USUARIOS U_ABERT ON U_ABERT.ID = MC.USUARIO_ABERT ' +
+             'LEFT  JOIN USUARIOS U_FECH  ON U_FECH.ID  = MC.USUARIO_FECH ' +
+             'WHERE MC.`STATUS` IN(' + sLcOpAbertFech + ') AND ';
+
+  if rgDataAberFech.ItemIndex = 0 then
+    sLcSql1 := sLcSql1 + 'MC.DATA_ABERT BETWEEN ' + sLcDataInicioFim
+  else
+    sLcSql1 := sLcSql1 + 'MC.DATA_FECH BETWEEN ' + sLcDataInicioFim;
+
+  with dmConsultaFechaCaixas.fdqConsultaFechaCaixas do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add(sLcSql1);
+    Open;
+  end;
+
+end;
+
+procedure TfrmConsultaVendas.Consultavendasporcaixa1Click(Sender: TObject);
+begin
+  if fNivelUsuario(iGbCodUsuario) = 0 then
+    pCriarForm(TfrmConsultaVendaProdutos, frmConsultaVendaProdutos)
+  else
+    if application.MessageBox(msg11, aMsg5, MB_OK + MB_ICONINFORMATION) = IDOK then
+end;
+
+procedure TfrmConsultaVendas.FecharCaixa1Click(Sender: TObject);
+begin
+  with dmConsultaFechaCaixas.fdqConsultaFechaCaixas do
+  begin
+    if FieldByName('STATUS').AsString = 'A' then
+    begin
+      if application.MessageBox(Pchar(Format(msg24,[FieldByName('ID').AsString])), cMsg2, MB_YESNO + MB_ICONINFORMATION) = IDYES then
+      begin
+        Edit;
+        FieldByName('USUARIO_FECH').AsString := sGbUsuarioLogado;
+        FieldByName('DATA_FECH').AsDateTime := Date + Time;
+        FieldByName('STATUS').AsString := 'F';
+        Post;
+        Refresh;
+      end;
+    end
+    else
+  end;
+end;
+
+procedure TfrmConsultaVendas.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  Action            := caFree;
+  frmConsultaVendas := nil;
+end;
+
+procedure TfrmConsultaVendas.FormCloseQuery(Sender: TObject;
+  var CanClose: Boolean);
+begin
+  dmConsultaFechaCaixas.fdqConsultaFechaCaixas.Close;
+end;
+
+procedure TfrmConsultaVendas.FormCreate(Sender: TObject);
+begin
+  if not Assigned(dmConsultaFechaCaixas) then
+    dmConsultaFechaCaixas := TdmConsultaFechaCaixas.Create(Self);
+end;
+
+procedure TfrmConsultaVendas.FormDestroy(Sender: TObject);
+begin
+  FreeAndNil(dmConsultaFechaCaixas);
+end;
+
+procedure TfrmConsultaVendas.FormKeyPress(Sender: TObject; var Key: Char);
+begin
+  if Key = #27 then
+    Close;
+end;
+
+procedure TfrmConsultaVendas.FormShow(Sender: TObject);
+begin
+  dtpDataInicio.Date := Date;
+  dtpDataFinal.Date  := Date;
+end;
+
+end.

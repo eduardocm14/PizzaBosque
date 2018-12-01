@@ -1,0 +1,21 @@
+object dmPrincipal: TdmPrincipal
+  OldCreateOrder = False
+  Height = 129
+  Width = 480
+  object conPizzaria: TFDConnection
+    ConnectionName = 'Pizzaria'
+    Params.Strings = (
+      'Database=pizzaria'
+      'User_Name=root'
+      'Password=admin159753'
+      'Server=localhost'
+      'DriverID=MySQL')
+    LoginPrompt = False
+    Left = 80
+    Top = 24
+  end
+  object fdphyMysqlPizzaria: TFDPhysMySQLDriverLink
+    Left = 280
+    Top = 24
+  end
+end

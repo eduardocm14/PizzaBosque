@@ -1,0 +1,502 @@
+inherited frmConsultaVendaProdutos: TfrmConsultaVendaProdutos
+  Caption = 'Consulta de Vendas/Produtos/Forma de Pagamento'
+  ClientHeight = 676
+  ClientWidth = 1129
+  OnCloseQuery = FormCloseQuery
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  OnShow = FormShow
+  ExplicitWidth = 1135
+  ExplicitHeight = 704
+  PixelsPerInch = 96
+  TextHeight = 13
+  object pgcConsultaVendas: TPageControl
+    Left = 0
+    Top = 0
+    Width = 1129
+    Height = 676
+    ActivePage = tabVendasEfetivadas
+    Align = alClient
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 0
+    OnChange = pgcConsultaVendasChange
+    object tabVendasEfetivadas: TTabSheet
+      Caption = 'Vendas Efetivadas'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      object grpVendaEfetivadas: TGroupBox
+        Left = 0
+        Top = 0
+        Width = 1121
+        Height = 645
+        Align = alClient
+        Color = clMoneyGreen
+        ParentBackground = False
+        ParentColor = False
+        TabOrder = 0
+        ExplicitTop = 80
+        ExplicitHeight = 565
+        object lblCaixaCodDesc: TLabel
+          Left = 338
+          Top = 3
+          Width = 158
+          Height = 23
+          Caption = 'lblCaixaCodDesc'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -19
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          ParentFont = False
+        end
+        object Label1: TLabel
+          Left = 3
+          Top = 3
+          Width = 333
+          Height = 23
+          Caption = 'Caixa/Descri'#231#227'o/Data de abertura:'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -19
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          ParentFont = False
+        end
+        object dbgVendas: TDBGrid
+          Left = 4
+          Top = 32
+          Width = 1113
+          Height = 269
+          DataSource = dmConsultaVendaProdutos.dsConsultaVendas
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+          ParentFont = False
+          TabOrder = 0
+          TitleFont.Charset = DEFAULT_CHARSET
+          TitleFont.Color = clWindowText
+          TitleFont.Height = -11
+          TitleFont.Name = 'Tahoma'
+          TitleFont.Style = []
+          OnDrawColumnCell = dbgVendasDrawColumnCell
+          Columns = <
+            item
+              Alignment = taCenter
+              Expanded = False
+              FieldName = 'id'
+              Title.Alignment = taCenter
+              Title.Caption = 'N'#250'mero'
+              Width = 44
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'operador'
+              Title.Caption = 'Caixa/Operador'
+              Width = 200
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'cliente'
+              Title.Caption = 'Cliente'
+              Width = 200
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'entregador'
+              Title.Caption = 'Entregador'
+              Width = 200
+              Visible = True
+            end
+            item
+              Alignment = taCenter
+              Expanded = False
+              FieldName = 'data_venda'
+              Title.Alignment = taCenter
+              Title.Caption = 'Data'
+              Width = 150
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'total_venda'
+              Title.Caption = 'Total(R$)'
+              Width = 122
+              Visible = True
+            end
+            item
+              Alignment = taCenter
+              Expanded = False
+              FieldName = 'venda_canc'
+              Title.Alignment = taCenter
+              Title.Caption = 'Status'
+              Width = 150
+              Visible = True
+            end>
+        end
+        object grpObsVenda: TGroupBox
+          Left = 4
+          Top = 300
+          Width = 1113
+          Height = 71
+          Caption = 'Observa'#231#227'o da venda'
+          Enabled = False
+          TabOrder = 1
+          object dbmmObsVendas: TDBMemo
+            Left = 2
+            Top = 15
+            Width = 1109
+            Height = 54
+            Align = alClient
+            DataField = 'obs'
+            DataSource = dmConsultaVendaProdutos.dsConsultaVendas
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -13
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 0
+          end
+        end
+        object dbgVendasProdutos: TDBGrid
+          Left = 3
+          Top = 373
+          Width = 400
+          Height = 269
+          DataSource = dmConsultaVendaProdutos.dsVendasProdutos
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -12
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+          ParentFont = False
+          TabOrder = 2
+          TitleFont.Charset = DEFAULT_CHARSET
+          TitleFont.Color = clWindowText
+          TitleFont.Height = -11
+          TitleFont.Name = 'Tahoma'
+          TitleFont.Style = []
+          Columns = <
+            item
+              Alignment = taCenter
+              Expanded = False
+              FieldName = 'codproduto'
+              Title.Alignment = taCenter
+              Title.Caption = 'C'#243'digo'
+              Width = 44
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'descricao'
+              Title.Caption = 'Produto'
+              Width = 235
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'valor'
+              Title.Alignment = taCenter
+              Title.Caption = 'Valor(R$)'
+              Width = 80
+              Visible = True
+            end>
+        end
+        object dbgVendasPgto: TDBGrid
+          Left = 403
+          Top = 373
+          Width = 400
+          Height = 269
+          DataSource = dmConsultaVendaProdutos.dsVendasPgto
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -12
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+          ParentFont = False
+          TabOrder = 3
+          TitleFont.Charset = DEFAULT_CHARSET
+          TitleFont.Color = clWindowText
+          TitleFont.Height = -11
+          TitleFont.Name = 'Tahoma'
+          TitleFont.Style = []
+          Columns = <
+            item
+              Alignment = taCenter
+              Expanded = False
+              FieldName = 'codformapgto'
+              Title.Alignment = taCenter
+              Title.Caption = 'C'#243'digo'
+              Width = 44
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'descricao'
+              Title.Caption = 'Forma de Pagamento'
+              Width = 235
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'valor'
+              Title.Alignment = taCenter
+              Title.Caption = 'Valor(R$)'
+              Width = 80
+              Visible = True
+            end>
+        end
+        object gbxTotalFormaPagto: TGroupBox
+          Left = 803
+          Top = 373
+          Width = 314
+          Height = 269
+          Caption = 'Total(Formas de Pagamentos)'
+          Color = clWhite
+          Enabled = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          ParentBackground = False
+          ParentColor = False
+          ParentFont = False
+          TabOrder = 4
+          object lbTotalGeral: TLabel
+            Left = 14
+            Top = 244
+            Width = 74
+            Height = 16
+            Caption = 'Total Geral:'
+          end
+          object dbgTotalFormaPgto: TDBGrid
+            Left = 0
+            Top = 19
+            Width = 329
+            Height = 221
+            DataSource = dmConsultaVendaProdutos.dsTotalFormaPagto
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold]
+            ParentFont = False
+            TabOrder = 0
+            TitleFont.Charset = DEFAULT_CHARSET
+            TitleFont.Color = clWindowText
+            TitleFont.Height = -13
+            TitleFont.Name = 'Tahoma'
+            TitleFont.Style = [fsBold]
+            Columns = <
+              item
+                Expanded = False
+                FieldName = 'descricao'
+                Title.Caption = 'Forma de Pagamento'
+                Title.Font.Charset = DEFAULT_CHARSET
+                Title.Font.Color = clWindowText
+                Title.Font.Height = -11
+                Title.Font.Name = 'Tahoma'
+                Title.Font.Style = []
+                Width = 190
+                Visible = True
+              end
+              item
+                Expanded = False
+                FieldName = 'vl_total'
+                Title.Alignment = taCenter
+                Title.Caption = 'Valor(R$)'
+                Title.Font.Charset = DEFAULT_CHARSET
+                Title.Font.Color = clWindowText
+                Title.Font.Height = -11
+                Title.Font.Name = 'Tahoma'
+                Title.Font.Style = []
+                Width = 80
+                Visible = True
+              end>
+          end
+          object dbedtTotalGeral: TDBEdit
+            Left = 92
+            Top = 241
+            Width = 121
+            Height = 24
+            DataField = 'TotalGeral'
+            DataSource = dmConsultaVendaProdutos.dsTotalFormaPagto
+            TabOrder = 1
+          end
+        end
+      end
+    end
+    object tabVendasCanceladas: TTabSheet
+      Caption = 'Vendas Canceladas'
+      ImageIndex = 1
+      object GroupBox1: TGroupBox
+        Left = 0
+        Top = 0
+        Width = 1121
+        Height = 645
+        Align = alClient
+        Color = clMoneyGreen
+        ParentBackground = False
+        ParentColor = False
+        TabOrder = 0
+        ExplicitTop = 48
+        ExplicitHeight = 597
+        object Label2: TLabel
+          Left = 2
+          Top = 3
+          Width = 333
+          Height = 23
+          Caption = 'Caixa/Descri'#231#227'o/Data de abertura:'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clRed
+          Font.Height = -19
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          ParentFont = False
+        end
+        object lblCaixaCodDescCanc: TLabel
+          Left = 337
+          Top = 3
+          Width = 158
+          Height = 23
+          Caption = 'lblCaixaCodDesc'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clRed
+          Font.Height = -19
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          ParentFont = False
+        end
+        object DBGrid1: TDBGrid
+          Left = 2
+          Top = 66
+          Width = 1117
+          Height = 577
+          Align = alBottom
+          DataSource = dmConsultaVendaProdutos.dsConsultaVendasCanceladas
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+          ParentFont = False
+          TabOrder = 0
+          TitleFont.Charset = DEFAULT_CHARSET
+          TitleFont.Color = clWindowText
+          TitleFont.Height = -11
+          TitleFont.Name = 'Tahoma'
+          TitleFont.Style = []
+          OnDrawColumnCell = dbgVendasDrawColumnCell
+          Columns = <
+            item
+              Alignment = taCenter
+              Expanded = False
+              FieldName = 'id'
+              Title.Alignment = taCenter
+              Title.Caption = 'N'#250'mero'
+              Width = 44
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'operador'
+              Title.Caption = 'Caixa/Operador'
+              Width = 200
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'cliente'
+              Title.Caption = 'Cliente'
+              Width = 200
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'entregador'
+              Title.Caption = 'Entregador'
+              Width = 200
+              Visible = True
+            end
+            item
+              Alignment = taCenter
+              Expanded = False
+              FieldName = 'data_venda'
+              Title.Alignment = taCenter
+              Title.Caption = 'Data'
+              Width = 150
+              Visible = True
+            end
+            item
+              Expanded = False
+              FieldName = 'total_venda'
+              Title.Caption = 'Total(R$)'
+              Width = 122
+              Visible = True
+            end
+            item
+              Alignment = taCenter
+              Expanded = False
+              FieldName = 'venda_canc'
+              Title.Alignment = taCenter
+              Title.Caption = 'Status'
+              Width = 150
+              Visible = True
+            end>
+        end
+        object GroupBox2: TGroupBox
+          Left = 942
+          Top = 20
+          Width = 177
+          Height = 44
+          Caption = 'Total vendas canceladas'
+          Enabled = False
+          TabOrder = 1
+          object dbedtTotalCancelado: TDBEdit
+            Left = 28
+            Top = 16
+            Width = 121
+            Height = 24
+            DataField = 'total_cancelado'
+            DataSource = dmConsultaVendaProdutos.dsConsultaVendasCanceladas
+            TabOrder = 0
+          end
+        end
+      end
+    end
+  end
+  object pmOpcao: TPopupMenu
+    Left = 520
+    Top = 208
+    object InclurEntregador1: TMenuItem
+      Caption = 'Inclu'#237'r Entregador'
+      OnClick = InclurEntregador1Click
+    end
+    object N1: TMenuItem
+      Caption = '-'
+    end
+    object CancelarVenda1: TMenuItem
+      Caption = 'Cancelar Venda'
+      OnClick = CancelarVenda1Click
+    end
+  end
+end

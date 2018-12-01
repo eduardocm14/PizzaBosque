@@ -1,0 +1,515 @@
+object dmConsultaVendaProdutos: TdmConsultaVendaProdutos
+  OldCreateOrder = False
+  Height = 467
+  Width = 526
+  object dsVendasProdutos: TDataSource
+    DataSet = fdqVendasProdutos
+    Left = 352
+    Top = 88
+  end
+  object fdqVendasProdutos: TFDQuery
+    Connection = dmPrincipal.conPizzaria
+    SQL.Strings = (
+      'select '
+      '  vp.id,'
+      '  vp.numvenda,'
+      '  vp.codproduto,'
+      '  p.descricao,'
+      '  p.valor'
+      'from vendasprodutos vp'
+      'inner join produtos p on p.id = vp.codproduto'
+      'where vp.numvenda = :pVenda'
+      'order by p.tipo desc')
+    Left = 112
+    Top = 88
+    ParamData = <
+      item
+        Name = 'PVENDA'
+        DataType = ftString
+        ParamType = ptInput
+        Value = Null
+      end>
+    object fdqVendasProdutosid: TFDAutoIncField
+      FieldName = 'id'
+      Origin = 'id'
+      ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
+    end
+    object fdqVendasProdutosnumvenda: TIntegerField
+      FieldName = 'numvenda'
+      Origin = 'numvenda'
+      Required = True
+    end
+    object fdqVendasProdutoscodproduto: TIntegerField
+      FieldName = 'codproduto'
+      Origin = 'codproduto'
+      Required = True
+    end
+    object fdqVendasProdutosdescricao: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'descricao'
+      Origin = 'descricao'
+      ProviderFlags = []
+      ReadOnly = True
+      Size = 80
+    end
+    object fdqVendasProdutosvalor: TBCDField
+      AutoGenerateValue = arDefault
+      FieldName = 'valor'
+      Origin = 'valor'
+      ProviderFlags = []
+      ReadOnly = True
+      DisplayFormat = '#,###0.00'
+      Precision = 10
+      Size = 2
+    end
+  end
+  object fdqVendasPgto: TFDQuery
+    Connection = dmPrincipal.conPizzaria
+    SQL.Strings = (
+      'select'
+      #9'vfp.numvenda,'
+      #9'vfp.codformapgto,'
+      #9'fp.descricao,'
+      #9'vfp.valor'
+      'from vendasformapgto vfp'
+      'inner join formaspgto fp on fp.id = vfp.codformapgto'
+      'where vfp.numvenda = :pVenda')
+    Left = 116
+    Top = 153
+    ParamData = <
+      item
+        Name = 'PVENDA'
+        DataType = ftString
+        ParamType = ptInput
+        Value = Null
+      end>
+    object fdqVendasPgtonumvenda: TIntegerField
+      AutoGenerateValue = arDefault
+      FieldName = 'numvenda'
+      Origin = 'numvenda'
+    end
+    object fdqVendasPgtocodformapgto: TIntegerField
+      AutoGenerateValue = arDefault
+      FieldName = 'codformapgto'
+      Origin = 'codformapgto'
+    end
+    object fdqVendasPgtodescricao: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'descricao'
+      Origin = 'descricao'
+      ProviderFlags = []
+      ReadOnly = True
+      Size = 50
+    end
+    object fdqVendasPgtovalor: TBCDField
+      AutoGenerateValue = arDefault
+      FieldName = 'valor'
+      Origin = 'valor'
+      DisplayFormat = '#,###0.00'
+      Precision = 10
+      Size = 2
+    end
+  end
+  object dsVendasPgto: TDataSource
+    DataSet = fdqVendasPgto
+    Left = 356
+    Top = 153
+  end
+  object fdqTotalFormaPagto: TFDQuery
+    AggregatesActive = True
+    Connection = dmPrincipal.conPizzaria
+    SQL.Strings = (
+      'select '
+      '  v.numcaixa,'
+      '  vfp.numvenda,'
+      '  vfp.codformapgto ,'
+      '  fp.descricao,'
+      '  sum(vfp.valor) vl_total,'
+      '  v.data'
+      'from vendasformapgto vfp'
+      'inner join formaspgto fp on fp.id = vfp.codformapgto'
+      'inner join vendas v on v.id = vfp.numvenda'
+      ''
+      'where v.numcaixa = :pNumCaixa and'
+      '      v.data between :pData1 and :pData2 and  '
+      '      v.status = '#39'V'#39
+      ''
+      'group by'
+      '  vfp.codformapgto,'
+      '  fp.descricao'
+      '  ')
+    Left = 116
+    Top = 229
+    ParamData = <
+      item
+        Name = 'PNUMCAIXA'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'PDATA1'
+        DataType = ftString
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'PDATA2'
+        DataType = ftString
+        ParamType = ptInput
+        Value = Null
+      end>
+    object fdqTotalFormaPagtonumcaixa: TIntegerField
+      FieldName = 'numcaixa'
+      Origin = 'numcaixa'
+      Required = True
+    end
+    object fdqTotalFormaPagtonumvenda: TIntegerField
+      AutoGenerateValue = arDefault
+      FieldName = 'numvenda'
+      Origin = 'numvenda'
+    end
+    object fdqTotalFormaPagtocodformapgto: TIntegerField
+      AutoGenerateValue = arDefault
+      FieldName = 'codformapgto'
+      Origin = 'codformapgto'
+    end
+    object fdqTotalFormaPagtodescricao: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'descricao'
+      Origin = 'descricao'
+      Size = 50
+    end
+    object fdqTotalFormaPagtovl_total: TFMTBCDField
+      AutoGenerateValue = arDefault
+      FieldName = 'vl_total'
+      Origin = 'vl_total'
+      DisplayFormat = '#,###0.00'
+      Precision = 32
+      Size = 2
+    end
+    object fdqTotalFormaPagtodata: TDateTimeField
+      AutoGenerateValue = arDefault
+      FieldName = 'data'
+      Origin = 'data'
+    end
+    object fdqTotalFormaPagtoTotalGeral: TAggregateField
+      Alignment = taRightJustify
+      FieldName = 'TotalGeral'
+      Active = True
+      currency = True
+      DisplayName = ''
+      DisplayFormat = '#,###0.00'
+      Expression = 'SUM(vl_total)'
+    end
+  end
+  object dsTotalFormaPagto: TDataSource
+    DataSet = fdqTotalFormaPagto
+    Left = 356
+    Top = 229
+  end
+  object fdgxwtcrsr1: TFDGUIxWaitCursor
+    Provider = 'Forms'
+    Left = 232
+    Top = 29
+  end
+  object dsConsultaVendas: TDataSource
+    DataSet = fdqConsultaVendas
+    Left = 352
+    Top = 328
+  end
+  object fdqConsultaVendas: TFDQuery
+    Connection = dmPrincipal.conPizzaria
+    SQL.Strings = (
+      'select '
+      '  v.id,'
+      '  v.numcaixa,'
+      '  v.codusuario codoper,'
+      '  u.nome operador,'
+      '  v.codcliente,'
+      '  c.nome cliente,'
+      '  v.codentregador,'
+      '  e.descricao entregador,'
+      '  v.`data` data_venda,'
+      '  v.`status`,'
+      '  v.obs,'
+      '  case '
+      '    when v.`status` = '#39'V'#39' then '#39'Vendido'#39
+      '    else '#39'Cancelado'#39' '
+      '  end as venda_canc,'
+      
+        '  (select sum(vfp.valor) total_venda from vendasformapgto vfp wh' +
+        'ere vfp.numvenda = v.id and v.status = '#39'V'#39') total_venda'
+      'from vendas v'
+      'inner join usuarios u     on u.id = v.codusuario'
+      'inner join clientes c '#9'  on c.id = v.codcliente'
+      'left join  entregadores e on e.id = v.codentregador'
+      'where v.numcaixa = :pNumCaixa and'
+      '      v.data between :pData1 and :pData2 and'
+      '      v.status = '#39'V'#39
+      'order by'
+      '  v.id')
+    Left = 112
+    Top = 328
+    ParamData = <
+      item
+        Name = 'PNUMCAIXA'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'PDATA1'
+        DataType = ftString
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'PDATA2'
+        DataType = ftString
+        ParamType = ptInput
+        Value = Null
+      end>
+    object fdqConsultaVendasid: TFDAutoIncField
+      FieldName = 'id'
+      Origin = 'id'
+      ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
+    end
+    object fdqConsultaVendasnumcaixa: TIntegerField
+      FieldName = 'numcaixa'
+      Origin = 'numcaixa'
+      Required = True
+    end
+    object fdqConsultaVendascodoper: TIntegerField
+      AutoGenerateValue = arDefault
+      FieldName = 'codoper'
+      Origin = 'codusuario'
+    end
+    object fdqConsultaVendasoperador: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'operador'
+      Origin = 'nome'
+      ProviderFlags = []
+      ReadOnly = True
+      Size = 100
+    end
+    object fdqConsultaVendascodcliente: TIntegerField
+      FieldName = 'codcliente'
+      Origin = 'codcliente'
+      Required = True
+    end
+    object fdqConsultaVendascliente: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'cliente'
+      Origin = 'nome'
+      ProviderFlags = []
+      ReadOnly = True
+      Size = 100
+    end
+    object fdqConsultaVendascodentregador: TIntegerField
+      AutoGenerateValue = arDefault
+      FieldName = 'codentregador'
+      Origin = 'codentregador'
+    end
+    object fdqConsultaVendasentregador: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'entregador'
+      Origin = 'descricao'
+      ProviderFlags = []
+      ReadOnly = True
+      Size = 100
+    end
+    object fdqConsultaVendasdata_venda: TDateTimeField
+      AutoGenerateValue = arDefault
+      FieldName = 'data_venda'
+      Origin = 'data'
+    end
+    object fdqConsultaVendasstatus: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'status'
+      Origin = 'status'
+      FixedChar = True
+      Size = 1
+    end
+    object fdqConsultaVendasvenda_canc: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'venda_canc'
+      Origin = 'venda_canc'
+      ProviderFlags = []
+      ReadOnly = True
+      Size = 9
+    end
+    object fdqConsultaVendastotal_venda: TFMTBCDField
+      AutoGenerateValue = arDefault
+      FieldName = 'total_venda'
+      Origin = 'total_venda'
+      ProviderFlags = []
+      ReadOnly = True
+      DisplayFormat = '#,###0.00'
+      Precision = 32
+      Size = 2
+    end
+    object fdqConsultaVendasobs: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'obs'
+      Origin = 'obs'
+      Size = 150
+    end
+  end
+  object dsConsultaVendasCanceladas: TDataSource
+    DataSet = fdqConsultaVendasCanceladas
+    Left = 344
+    Top = 392
+  end
+  object fdqConsultaVendasCanceladas: TFDQuery
+    AggregatesActive = True
+    Connection = dmPrincipal.conPizzaria
+    SQL.Strings = (
+      'select '
+      '  v.id,'
+      '  v.numcaixa,'
+      '  v.codusuario codoper,'
+      '  u.nome operador,'
+      '  v.codcliente,'
+      '  c.nome cliente,'
+      '  v.codentregador,'
+      '  e.descricao entregador,'
+      '  v.`data` data_venda,'
+      '  v.`status`,'
+      '  v.obs,'
+      '  case '
+      '    when v.`status` = '#39'V'#39' then '#39'Vendido'#39
+      '    else '#39'Cancelado'#39' '
+      '  end as venda_canc,'
+      
+        '  (select sum(vfp.valor) total_venda from vendasformapgto vfp wh' +
+        'ere vfp.numvenda = v.id and v.status = '#39'C'#39') total_venda'
+      'from vendas v'
+      'inner join usuarios u     on u.id = v.codusuario'
+      'inner join clientes c '#9'  on c.id = v.codcliente'
+      'left join  entregadores e on e.id = v.codentregador'
+      'where v.numcaixa = :pNumCaixa and'
+      '      v.data between :pData1 and :pData2 and'
+      '      v.status = '#39'C'#39
+      'order by'
+      '  v.id')
+    Left = 112
+    Top = 392
+    ParamData = <
+      item
+        Name = 'PNUMCAIXA'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'PDATA1'
+        DataType = ftString
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'PDATA2'
+        DataType = ftString
+        ParamType = ptInput
+        Value = Null
+      end>
+    object FDAutoIncField1: TFDAutoIncField
+      FieldName = 'id'
+      Origin = 'id'
+      ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
+    end
+    object IntegerField1: TIntegerField
+      FieldName = 'numcaixa'
+      Origin = 'numcaixa'
+      Required = True
+    end
+    object IntegerField2: TIntegerField
+      AutoGenerateValue = arDefault
+      FieldName = 'codoper'
+      Origin = 'codusuario'
+    end
+    object StringField1: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'operador'
+      Origin = 'nome'
+      ProviderFlags = []
+      ReadOnly = True
+      Size = 100
+    end
+    object IntegerField3: TIntegerField
+      FieldName = 'codcliente'
+      Origin = 'codcliente'
+      Required = True
+    end
+    object StringField2: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'cliente'
+      Origin = 'nome'
+      ProviderFlags = []
+      ReadOnly = True
+      Size = 100
+    end
+    object IntegerField4: TIntegerField
+      AutoGenerateValue = arDefault
+      FieldName = 'codentregador'
+      Origin = 'codentregador'
+    end
+    object StringField3: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'entregador'
+      Origin = 'descricao'
+      ProviderFlags = []
+      ReadOnly = True
+      Size = 100
+    end
+    object DateTimeField1: TDateTimeField
+      AutoGenerateValue = arDefault
+      FieldName = 'data_venda'
+      Origin = 'data'
+    end
+    object StringField4: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'status'
+      Origin = 'status'
+      FixedChar = True
+      Size = 1
+    end
+    object StringField5: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'venda_canc'
+      Origin = 'venda_canc'
+      ProviderFlags = []
+      ReadOnly = True
+      Size = 9
+    end
+    object FMTBCDField1: TFMTBCDField
+      AutoGenerateValue = arDefault
+      FieldName = 'total_venda'
+      Origin = 'total_venda'
+      ProviderFlags = []
+      ReadOnly = True
+      DisplayFormat = '#,###0.00'
+      Precision = 32
+      Size = 2
+    end
+    object StringField6: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'obs'
+      Origin = 'obs'
+      Size = 150
+    end
+    object fdqConsultaVendasCanceladastotal_cancelado: TAggregateField
+      Alignment = taRightJustify
+      FieldName = 'total_cancelado'
+      Active = True
+      currency = True
+      DisplayName = ''
+      DisplayFormat = '#,###0.00'
+      Expression = 'SUM(total_venda)'
+    end
+  end
+end

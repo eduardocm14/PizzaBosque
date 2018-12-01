@@ -1,0 +1,41 @@
+unit UdmProdutos;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
+  FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, FireDAC.UI.Intf,
+  FireDAC.VCLUI.Wait, Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.UI,
+  FireDAC.Comp.Client;
+
+type
+  TdmProdutos = class(TDataModule)
+    fdqryProdutos: TFDQuery;
+    dsProdutos: TDataSource;
+    fdgxwtcrsr1: TFDGUIxWaitCursor;
+    fdqryProdutosid: TFDAutoIncField;
+    fdqryProdutosdescricao: TStringField;
+    fdqryProdutoscm: TIntegerField;
+    fdqryProdutosfatias: TIntegerField;
+    fdqryProdutosvalor: TBCDField;
+    fdqryProdutostipo: TStringField;
+    fdqryProdutoscodinterno: TIntegerField;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  dmProdutos: TdmProdutos;
+
+implementation
+
+{%CLASSGROUP 'Vcl.Controls.TControl'}
+
+uses UdmPrincipal;
+
+{$R *.dfm}
+
+end.

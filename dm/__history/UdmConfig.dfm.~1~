@@ -1,0 +1,5 @@
+object dmConfig: TdmConfig
+  OldCreateOrder = False
+  Height = 425
+  Width = 716
+end

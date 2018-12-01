@@ -1,0 +1,59 @@
+unit UfrmTestes;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Grids, Vcl.DBGrids,
+  Vcl.StdCtrls, Vcl.Mask, Vcl.DBCtrls;
+
+type
+  TfrmTestes = class(TForm)
+    dbgTeste1: TDBGrid;
+    dbgTeste2: TDBGrid;
+    lbVenda: TLabel;
+    dbedtNumeroVenda: TDBEdit;
+    procedure FormCreate(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure FormDestroy(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmTestes: TfrmTestes;
+
+implementation
+
+uses
+  UdmVendas;
+
+{$R *.dfm}
+
+procedure TfrmTestes.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+ Action := caFree;
+ frmTestes := nil;
+end;
+
+procedure TfrmTestes.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+begin
+  dmVendas.fdqVendas.Close;
+end;
+
+procedure TfrmTestes.FormCreate(Sender: TObject);
+begin
+  if not Assigned(dmVendas) then
+    dmVendas := TdmVendas.Create(Self);
+  dmVendas.fdqVendas.Open;
+end;
+
+procedure TfrmTestes.FormDestroy(Sender: TObject);
+begin
+  FreeAndNil(dmVendas);
+end;
+
+end.

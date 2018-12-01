@@ -1,0 +1,19 @@
+object dmPrincipal: TdmPrincipal
+  OldCreateOrder = False
+  OnCreate = DataModuleCreate
+  Height = 221
+  Width = 665
+  object fdphyMysqlBancoDados: TFDPhysMySQLDriverLink
+    Left = 280
+    Top = 24
+  end
+  object fdConBancoDados: TFDConnection
+    Params.Strings = (
+      'User_Name=root'
+      'Password=admin159753'
+      'DriverID=MySQL')
+    LoginPrompt = False
+    Left = 104
+    Top = 64
+  end
+end

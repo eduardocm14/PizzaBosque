@@ -1,0 +1,33 @@
+inherited frmConfig: TfrmConfig
+  Caption = 'Configura'#231#245'es do Sistema'
+  ClientHeight = 294
+  ClientWidth = 535
+  ExplicitWidth = 541
+  ExplicitHeight = 322
+  PixelsPerInch = 96
+  TextHeight = 13
+  object gbxCaixa: TGroupBox
+    Left = 5
+    Top = 6
+    Width = 185
+    Height = 105
+    Caption = 'Op'#231#245'es Caixa'
+    TabOrder = 0
+  end
+  object gbxInternet: TGroupBox
+    Left = 196
+    Top = 6
+    Width = 185
+    Height = 105
+    Caption = 'Internet'
+    TabOrder = 1
+    object dbCbxAdsl: TDBCheckBox
+      Left = 9
+      Top = 26
+      Width = 97
+      Height = 17
+      Caption = 'Acesso ADSL'
+      TabOrder = 0
+    end
+  end
+end

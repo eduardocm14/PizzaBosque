@@ -1,0 +1,36 @@
+unit uMensagens;
+
+interface
+// Mensagem Utilizadas nos projetos
+  const
+    aMsg  = 'Atenção';
+    cMsg  = 'Confirmação';
+    eMsg  = 'Erro';
+    msg1  = 'Deseja Sair do Sistema?';
+    msg3  = 'Registro salvo com sucesso.';
+    msg4  = 'Excluir Registro: ';
+    msg6  = 'Informe o CEP para fazer a busca!';
+    msg7  = 'Tamanho CEP inválido!';
+    msg8  = 'Cadastre os dados da empresa(Pizzaria).';
+    msg9  = 'Informe usuário e senha.';
+    msg10 = 'Usuário e/ou senha inválidos.';
+    msg11 = 'Usuário sem permissão de acesso. Contate o Administrador.';
+    msg12 = 'Selecione um registro(Caixa)para Consultar/Fechar.';
+    msg13 = 'Limpar todo cadastro?';
+    msg14 = 'Sair sem salvar o registro?';
+    msg15 = 'Selecione os sabores(Pizza).';
+    msg16 = 'Registro não encontrado.';
+    msg17 = 'O pedido será cancelado.';
+    msg18 = 'Venda[%s]realizada com sucesso.';
+    msg19 = 'Informe o ';
+    msg20 = 'Caixa aberto com sucesso.';
+    msg21 = 'Caixa encontra-se aberto. Realize o fechamento.';
+    msg22 = 'Necessário realizar abertura de caixa para continuar.';
+    msg23 = 'Incluir mais produtos(Pizza/Bebidas) ao pedido?';
+    msg24 = 'Fechar o caixa:[%s]? Operação não pode ser desfeita.';
+    msg25 = 'Caixa[%s]está fechado.';
+    msg26 = 'Selecione um caixa para abrir a tela de vendas.';
+
+implementation
+
+end.

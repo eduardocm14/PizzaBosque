@@ -1,0 +1,62 @@
+object dmVendas: TdmVendas
+  OldCreateOrder = False
+  Height = 176
+  Width = 524
+  object fdqVendas: TFDQuery
+    Connection = dmPrincipal.conPizzaria
+    UpdateOptions.AutoIncFields = 'id'
+    SQL.Strings = (
+      'select * from vendas'
+      ' where id = -1')
+    Left = 64
+    Top = 32
+    object fdqVendasid: TFDAutoIncField
+      FieldName = 'id'
+      Origin = 'id'
+      ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
+    end
+    object fdqVendasnumcaixa: TIntegerField
+      FieldName = 'numcaixa'
+      Origin = 'numcaixa'
+      Required = True
+    end
+    object fdqVendascodusuario: TIntegerField
+      AutoGenerateValue = arDefault
+      FieldName = 'codusuario'
+      Origin = 'codusuario'
+    end
+    object fdqVendascodcliente: TIntegerField
+      FieldName = 'codcliente'
+      Origin = 'codcliente'
+      Required = True
+    end
+    object fdqVendascodentregador: TIntegerField
+      AutoGenerateValue = arDefault
+      FieldName = 'codentregador'
+      Origin = 'codentregador'
+    end
+    object fdqVendasdata: TDateTimeField
+      AutoGenerateValue = arDefault
+      FieldName = 'data'
+      Origin = 'data'
+    end
+    object fdqVendasstatus: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'status'
+      Origin = 'status'
+      FixedChar = True
+      Size = 1
+    end
+  end
+  object dsVendas: TDataSource
+    DataSet = fdqVendas
+    Left = 229
+    Top = 33
+  end
+  object fdgxwtcrsr1: TFDGUIxWaitCursor
+    Provider = 'Forms'
+    Left = 391
+    Top = 26
+  end
+end

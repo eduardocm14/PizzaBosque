@@ -1,0 +1,184 @@
+unit UfrmConsultaVendaProdutos;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, UfrmPadrao, Vcl.StdCtrls, Vcl.ComCtrls,
+  Data.DB, Vcl.Grids, Vcl.DBGrids, Vcl.Menus, Vcl.DBCtrls, Vcl.ExtCtrls, FireDAC.Stan.Param,
+  Vcl.Mask;
+
+type
+  TfrmConsultaVendaProdutos = class(TfrmPadrao)
+    dbgVendas: TDBGrid;
+    dbgVendasProdutos: TDBGrid;
+    dbgVendasPgto: TDBGrid;
+    gbxCaixaCodDesc: TGroupBox;
+    lblCaixaCodDesc: TLabel;
+    gbxTotalFormaPagto: TGroupBox;
+    lbTotalGeral: TLabel;
+    dbgTotalFormaPgto: TDBGrid;
+    dbedtTotalGeral: TDBEdit;
+    pmOpcao: TPopupMenu;
+    InclurEntregador1: TMenuItem;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure FormShow(Sender: TObject);
+    procedure dbgVendasDrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure InclurEntregador1Click(Sender: TObject);
+  private
+    { Private declarations }
+    procedure pConsultaVendasCabecalho(pNumCaixa, pData1, pData2:string);
+    procedure pTotalFormaPagto(pNumCaixa, pData1, pData2:string);
+    procedure pVendasProdutos;
+    procedure pVendasPagto;
+  public
+    { Public declarations }
+  end;
+
+var
+  frmConsultaVendaProdutos: TfrmConsultaVendaProdutos;
+
+implementation
+
+{$R *.dfm}
+
+uses UfrmVendas, uFuncoes, UdmConsultaVendaProdutos, UdmConsultaFechaCaixas,
+  UfrmPesqEntregadores;
+
+procedure TfrmConsultaVendaProdutos.dbgVendasDrawColumnCell(Sender: TObject;
+  const Rect: TRect; DataCol: Integer; Column: TColumn; State: TGridDrawState);
+begin
+  inherited;
+
+  if (gdSelected in State) then
+  begin
+    pVendasProdutos;
+    pVendasPagto;
+  end;
+end;
+
+procedure TfrmConsultaVendaProdutos.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  inherited;
+
+  Action                   := caFree;
+  frmConsultaVendaProdutos := nil;
+end;
+
+procedure TfrmConsultaVendaProdutos.FormCloseQuery(Sender: TObject;
+  var CanClose: Boolean);
+begin
+  inherited;
+
+  dmConsultaVendaProdutos.fdqConsultaVendas.Close;
+end;
+
+procedure TfrmConsultaVendaProdutos.FormCreate(Sender: TObject);
+begin
+  inherited;
+
+  if not Assigned(dmConsultaVendaProdutos) then
+    dmConsultaVendaProdutos := TdmConsultaVendaProdutos.Create(Self);
+end;
+
+procedure TfrmConsultaVendaProdutos.FormDestroy(Sender: TObject);
+begin
+  inherited;
+
+  FreeAndNil(dmConsultaVendaProdutos);
+end;
+
+procedure TfrmConsultaVendaProdutos.FormShow(Sender: TObject);
+begin
+  inherited;
+
+  if not Assigned(frmVendas) then
+  begin
+    lblCaixaCodDesc.Caption := '[' + dmConsultaFechaCaixas.fdqConsultaFechaCaixasid.AsString + '] ' +
+                               '[' + dmConsultaFechaCaixas.fdqConsultaFechaCaixascaixa_desc.AsString + '] ' +
+                               '[' + dmConsultaFechaCaixas.fdqConsultaFechaCaixasdata_abert.AsString + '] ';
+
+    pConsultaVendasCabecalho(dmConsultaFechaCaixas.fdqConsultaFechaCaixasid.AsString,
+                             sGbConsultaVendasDataInicio, sGbConsultaVendasDataFim);
+    pTotalFormaPagto(dmConsultaFechaCaixas.fdqConsultaFechaCaixasid.AsString,
+                     sGbConsultaVendasDataInicio, sGbConsultaVendasDataFim);
+  end
+  else
+  begin
+    lblCaixaCodDesc.Caption := '[' + IntToStr(iGbNumCaixaAberto) + '] [' + sGbDescCaixa + '] [' + sGbDtCaixaAberto + '] ';
+    pConsultaVendasCabecalho(IntToStr(iGbNumCaixaAberto), frmVendas.sPbDataCaixaAberto,
+                             FormatDateTime('yyyy.mm.dd', Now) + ' ' + FormatDateTime('hh.mm.ss', Now));
+    pTotalFormaPagto(IntToStr(iGbNumCaixaAberto), frmVendas.sPbDataCaixaAberto,
+                     FormatDateTime('yyyy.mm.dd', Now) + ' ' + FormatDateTime('hh.mm.ss', Now));
+
+  end;
+
+end;
+
+procedure TfrmConsultaVendaProdutos.InclurEntregador1Click(Sender: TObject);
+begin
+  inherited;
+
+  if not Assigned(frmPesqEntregadores) then
+    frmPesqEntregadores := TfrmPesqEntregadores.Create(Self);
+  frmPesqEntregadores.ShowModal;
+
+  with dmConsultaVendaProdutos.fdqConsultaVendas do
+  begin
+    Edit;
+    FieldByName('codentregador').AsString := sGbCodEntregador;
+    Post;
+    Refresh;
+  end;
+end;
+
+procedure TfrmConsultaVendaProdutos.pConsultaVendasCabecalho(pNumCaixa, pData1, pData2:string);
+begin
+  with dmConsultaVendaProdutos.fdqConsultaVendas do
+  begin
+    Close;
+    Params.ParamByName('pNumCaixa').AsString := pNumCaixa;
+    Params.ParamByName('pData1').AsString    := pData1;
+    Params.ParamByName('pData2').AsString    := pData2;
+    Open;
+  end;
+end;
+
+procedure TfrmConsultaVendaProdutos.pTotalFormaPagto(pNumCaixa, pData1, pData2:string);
+begin
+  with dmConsultaVendaProdutos.fdqTotalFormaPagto do
+  begin
+    Close;
+    Params.ParamByName('pNumCaixa').AsString := pNumCaixa;
+    Params.ParamByName('pData1').AsString    := pData1;
+    Params.ParamByName('pData2').AsString    := pData2;
+    Open;
+  end;
+end;
+
+procedure TfrmConsultaVendaProdutos.pVendasPagto;
+begin
+  with dmConsultaVendaProdutos.fdqVendasPgto do
+  begin
+    Close;
+    Params.ParamByName('pVenda').AsString := dmConsultaVendaProdutos.fdqConsultaVendasid.AsString;
+    Open;
+  end;
+end;
+
+procedure TfrmConsultaVendaProdutos.pVendasProdutos;
+begin
+  with dmConsultaVendaProdutos.fdqVendasProdutos do
+  begin
+    Close;
+    Params.ParamByName('pVenda').AsString := dmConsultaVendaProdutos.fdqConsultaVendasid.AsString;
+    Open;
+  end;
+end;
+
+end.

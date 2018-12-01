@@ -1,0 +1,64 @@
+object dmConfig: TdmConfig
+  OldCreateOrder = False
+  Height = 239
+  Width = 716
+  object fdqryConfigEmpresa: TFDQuery
+    Connection = dmPrincipal.fdConBancoDados
+    SQL.Strings = (
+      'select * from empresa')
+    Left = 48
+    Top = 64
+    object fdqryConfigEmpresaid: TFDAutoIncField
+      FieldName = 'id'
+      Origin = 'id'
+      ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
+    end
+    object fdqryConfigEmpresarazao: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'razao'
+      Origin = 'razao'
+      Size = 100
+    end
+    object fdqryConfigEmpresafantasia: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'fantasia'
+      Origin = 'fantasia'
+      Size = 100
+    end
+    object fdqryConfigEmpresacnpj: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'cnpj'
+      Origin = 'cnpj'
+      Size = 14
+    end
+    object fdqryConfigEmpresaie: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'ie'
+      Origin = 'ie'
+      Size = 9
+    end
+    object fdqryConfigEmpresafone1: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'fone1'
+      Origin = 'fone1'
+      Size = 10
+    end
+    object fdqryConfigEmpresafone2: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'fone2'
+      Origin = 'fone2'
+      Size = 10
+    end
+  end
+  object dsEmpresa: TDataSource
+    DataSet = fdqryConfigEmpresa
+    Left = 264
+    Top = 64
+  end
+  object fdgxwtcrsr1: TFDGUIxWaitCursor
+    Provider = 'Forms'
+    Left = 320
+    Top = 8
+  end
+end

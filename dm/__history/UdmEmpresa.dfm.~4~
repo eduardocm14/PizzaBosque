@@ -1,0 +1,64 @@
+object dmEmpresa: TdmEmpresa
+  OldCreateOrder = False
+  Height = 211
+  Width = 397
+  object fdqConfigEmp: TFDQuery
+    Connection = dmPrincipal.fdConBancoDados
+    SQL.Strings = (
+      'select * from empresa')
+    Left = 72
+    Top = 96
+    object fdqConfigEmpid: TFDAutoIncField
+      FieldName = 'id'
+      Origin = 'id'
+      ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
+    end
+    object fdqConfigEmprazao: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'razao'
+      Origin = 'razao'
+      Size = 100
+    end
+    object fdqConfigEmpfantasia: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'fantasia'
+      Origin = 'fantasia'
+      Size = 100
+    end
+    object fdqConfigEmpcnpj: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'cnpj'
+      Origin = 'cnpj'
+      Size = 14
+    end
+    object fdqConfigEmpie: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'ie'
+      Origin = 'ie'
+      Size = 9
+    end
+    object fdqConfigEmpfone1: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'fone1'
+      Origin = 'fone1'
+      Size = 10
+    end
+    object fdqConfigEmpfone2: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'fone2'
+      Origin = 'fone2'
+      Size = 10
+    end
+  end
+  object dsConfigEmp: TDataSource
+    DataSet = fdqConfigEmp
+    Left = 264
+    Top = 96
+  end
+  object fdgxwtcrsr1: TFDGUIxWaitCursor
+    Provider = 'Forms'
+    Left = 160
+    Top = 16
+  end
+end

@@ -1,0 +1,322 @@
+unit UfrmPrincipal;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Menus, Vcl.ComCtrls,
+  Vcl.ToolWin, System.ImageList, Vcl.ImgList, Winapi.ShellAPI, Vcl.ExtCtrls;
+
+type
+  TfrmPrincipal = class(TForm)
+    mmPrincipal: TMainMenu;
+    Cadastros1: TMenuItem;
+    Clientes1: TMenuItem;
+    stbPrincipal: TStatusBar;
+    N1: TMenuItem;
+    EmpresaPizzaria1: TMenuItem;
+    N2: TMenuItem;
+    Sabores1: TMenuItem;
+    iposTamanhos1: TMenuItem;
+    N3: TMenuItem;
+    Sair1: TMenuItem;
+    N4: TMenuItem;
+    Usurios1: TMenuItem;
+    rocarUsurio1: TMenuItem;
+    Operaes1: TMenuItem;
+    Vendas1: TMenuItem;
+    N5: TMenuItem;
+    FormasdePagamento1: TMenuItem;
+    N6: TMenuItem;
+    Caixa1: TMenuItem;
+    Configurao1: TMenuItem;
+    Opes1: TMenuItem;
+    N7: TMenuItem;
+    Entregadores1: TMenuItem;
+    N8: TMenuItem;
+    FormulriodeTestes1: TMenuItem;
+    ToolBar1: TToolBar;
+    ImageList1: TImageList;
+    ToolButton1: TToolButton;
+    ToolButton2: TToolButton;
+    ToolButton3: TToolButton;
+    Caixas1: TMenuItem;
+    btn1: TToolButton;
+    btn2: TToolButton;
+    procedure FormKeyPress(Sender: TObject; var Key: Char);
+    procedure FormCreate(Sender: TObject);
+    procedure EmpresaPizzaria1Click(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure Sair1Click(Sender: TObject);
+    procedure Usurios1Click(Sender: TObject);
+    procedure rocarUsurio1Click(Sender: TObject);
+    procedure Clientes1Click(Sender: TObject);
+    procedure FormasdePagamento1Click(Sender: TObject);
+    procedure Sabores1Click(Sender: TObject);
+    procedure iposTamanhos1Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure Entregadores1Click(Sender: TObject);
+    procedure FormulriodeTestes1Click(Sender: TObject);
+    procedure tbtnVendasClick(Sender: TObject);
+    procedure ToolButton1Click(Sender: TObject);
+    procedure ToolButton3Click(Sender: TObject);
+    procedure Caixas1Click(Sender: TObject);
+    procedure Vendas1Click(Sender: TObject);
+    procedure Opes1Click(Sender: TObject);
+    procedure Fechar1Click(Sender: TObject);
+    procedure btn2Click(Sender: TObject);
+    procedure Caixa1Click(Sender: TObject);
+  private
+    { Private declarations }
+    procedure AbreTelaVendas;
+  public
+    { Public declarations }
+  end;
+
+var
+  frmPrincipal: TfrmPrincipal;
+
+implementation
+
+{$R *.dfm}
+uses uMensagens, uFuncoes, UdmPrincipal, UfrmEmpresa,
+  UfrmClientes, UfrmFormasPgto, UfrmUsuarios, UfrmSabores, UfrmEntregadores,
+  UfrmVendas, UfrmTestes, UfrmProdutos, UfrmAbreCaixas, UfrmCaixas,
+  UfrmPesqCaixasAbertos, UfrmPadrao, UfrmConsultaVendas, UfrmConfig;
+
+procedure TfrmPrincipal.AbreTelaVendas;
+begin
+  if fQtdCaixasAbertos = 0 then
+  begin
+    if application.MessageBox(msg22, aMsg, MB_OK + MB_ICONINFORMATION) = IDOK then
+  end
+  else if fQtdCaixasAbertos = 1 then
+  begin
+    try
+      if not Assigned(frmVendas) then
+        frmVendas := TfrmVendas.Create(Self);
+      frmVendas.ShowModal;
+    finally
+      FreeAndNil(frmVendas);
+    end;
+  end
+  else if fQtdCaixasAbertos > 1 then
+  begin
+    try
+      if not Assigned(frmPesqCaixasAbertos) then
+        frmPesqCaixasAbertos := TfrmPesqCaixasAbertos.Create(Self);
+      frmPesqCaixasAbertos.ShowModal;
+    finally
+      FreeAndNil(frmPesqCaixasAbertos);
+    end;
+
+    // Apos selecionar caixa, abre a tela de Vendas
+    if iGbNumCaixaAberto > 0 then
+    begin
+      try
+        if not Assigned(frmVendas) then
+          frmVendas := TfrmVendas.Create(Self);
+        frmVendas.ShowModal;
+      finally
+        FreeAndNil(frmVendas);
+      end;
+    end
+    else
+      if application.MessageBox (msg26, aMsg, MB_OK + MB_ICONINFORMATION) = IDOK then
+  end
+end;
+
+procedure TfrmPrincipal.btn2Click(Sender: TObject);
+begin
+  if fNivelUsuario(iGbCodUsuario) = 0 then
+    pCriarForm(TfrmConsultaVendas, frmConsultaVendas)
+  else
+    if application.MessageBox (msg11, aMsg, MB_OK + MB_ICONINFORMATION) = IDOK then
+end;
+
+procedure TfrmPrincipal.Caixa1Click(Sender: TObject);
+begin
+  if not Assigned(frmAbreCaixas) then
+    frmAbreCaixas := TfrmAbreCaixas.Create(Self);
+  frmAbreCaixas.ShowModal;
+end;
+
+procedure TfrmPrincipal.Caixas1Click(Sender: TObject);
+begin
+  if fNivelUsuario(iGbCodUsuario) = 0 then
+  begin
+    if not fNomePizzaria.isEmpty then
+      pCriarForm(TfrmCaixas, frmCaixas)
+    else
+      if application.MessageBox (msg8, aMsg, MB_OK + MB_ICONINFORMATION) = IDOK then
+  end
+  else
+    if application.MessageBox (msg11, aMsg, MB_OK + MB_ICONINFORMATION) = IDOK then
+end;
+
+procedure TfrmPrincipal.Clientes1Click(Sender: TObject);
+begin
+  if fNivelUsuario(iGbCodUsuario) = 0 then
+  begin
+    if not fNomePizzaria.isEmpty then
+      pCriarForm(TfrmClientes, frmClientes)
+    else
+      if application.MessageBox (msg8, aMsg, MB_OK + MB_ICONINFORMATION) = IDOK then
+  end
+  else
+    if application.MessageBox (msg11, aMsg, MB_OK + MB_ICONINFORMATION) = IDOK then
+end;
+
+procedure TfrmPrincipal.EmpresaPizzaria1Click(Sender: TObject);
+begin
+  if fNivelUsuario(iGbCodUsuario) = 0 then
+    pCriarForm(TfrmEmpresa, frmEmpresa)
+  else
+    if application.MessageBox (msg11, aMsg, MB_OK + MB_ICONINFORMATION) = IDOK then
+end;
+
+procedure TfrmPrincipal.Entregadores1Click(Sender: TObject);
+begin
+  if fNivelUsuario(iGbCodUsuario) = 0 then
+  begin
+    if not fNomePizzaria.isEmpty then
+      pCriarForm(TfrmEntregadores, frmEntregadores)
+    else
+      if application.MessageBox (msg8, aMsg, MB_OK + MB_ICONINFORMATION) = IDOK then
+  end
+  else
+    if application.MessageBox (msg11, aMsg, MB_OK + MB_ICONINFORMATION) = IDOK then
+end;
+
+procedure TfrmPrincipal.Fechar1Click(Sender: TObject);
+begin
+  if not Assigned(frmConsultaVendas) then
+    frmConsultaVendas := TfrmConsultaVendas.Create(Self);
+  frmConsultaVendas.ShowModal;
+end;
+
+procedure TfrmPrincipal.FormasdePagamento1Click(Sender: TObject);
+begin
+  if fNivelUsuario(iGbCodUsuario) = 0 then
+  begin
+    if not fNomePizzaria.isEmpty then
+      pCriarForm(TfrmFormasPagto, frmFormasPagto)
+    else
+      if application.MessageBox (msg8, aMsg, MB_OK + MB_ICONINFORMATION) = IDOK then
+  end
+  else
+    if application.MessageBox (msg11, aMsg, MB_OK + MB_ICONINFORMATION) = IDOK then
+end;
+
+procedure TfrmPrincipal.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  pFecharSistema;
+end;
+
+procedure TfrmPrincipal.FormCreate(Sender: TObject);
+begin
+  stbPrincipal.Panels[0].Text := sGbVersao;
+  stbPrincipal.Panels[1].Text := 'Aplicativo(' + ExtractFilePath(Application.ExeName) + ')';
+  stbPrincipal.Panels[2].Text := 'Banco de Dados(' + dmPrincipal.sPbConexao + ')';
+  stbPrincipal.Panels[3].Text := 'Desenv.(Eduardo Moraes)';
+end;
+
+procedure TfrmPrincipal.FormKeyPress(Sender: TObject; var Key: Char);
+begin
+  if Key = #27 then
+    Close;
+end;
+
+procedure TfrmPrincipal.FormShow(Sender: TObject);
+begin
+  Self.Caption := Format(msg29,[fNomePizzaria, sGbUsuarioLogado]);
+end;
+
+procedure TfrmPrincipal.FormulriodeTestes1Click(Sender: TObject);
+begin
+  if not Assigned(frmTestes) then
+    frmTestes := TfrmTestes.Create(Self);
+  frmTestes.ShowModal;
+end;
+
+procedure TfrmPrincipal.iposTamanhos1Click(Sender: TObject);
+begin
+  if fNivelUsuario(iGbCodUsuario) = 0 then
+  begin
+    if not fNomePizzaria.isEmpty then
+      pCriarForm(TfrmProdutos, frmProdutos)
+    else
+      if application.MessageBox (msg8, aMsg, MB_OK + MB_ICONINFORMATION) = IDOK then
+  end
+  else
+    if application.MessageBox (msg11, aMsg, MB_OK + MB_ICONINFORMATION) = IDOK then
+end;
+
+procedure TfrmPrincipal.Opes1Click(Sender: TObject);
+begin
+  if fNivelUsuario(iGbCodUsuario) = 0 then
+    pCriarForm(TfrmConfig, frmConfig)
+  else
+    if application.MessageBox (msg11, aMsg, MB_OK + MB_ICONINFORMATION) = IDOK then
+end;
+
+procedure TfrmPrincipal.rocarUsurio1Click(Sender: TObject);
+begin
+  ShellExecute(Handle, nil, PChar(Application.ExeName), nil, nil, SW_SHOWNORMAL);
+  Application.Terminate;
+end;
+
+procedure TfrmPrincipal.Sabores1Click(Sender: TObject);
+begin
+  if fNivelUsuario(iGbCodUsuario) = 0 then
+  begin
+    if not fNomePizzaria.isEmpty then
+      pCriarForm(TfrmSabores, frmSabores)
+    else
+      if application.MessageBox (msg8, aMsg, MB_OK + MB_ICONINFORMATION) = IDOK then
+  end
+  else
+    if application.MessageBox (msg11, aMsg, MB_OK + MB_ICONINFORMATION) = IDOK then
+end;
+
+procedure TfrmPrincipal.Sair1Click(Sender: TObject);
+begin
+  pFecharSistema;
+end;
+
+procedure TfrmPrincipal.tbtnVendasClick(Sender: TObject);
+begin
+  if not Assigned(frmVendas) then
+    frmVendas := TfrmVendas.Create(Self);
+  frmVendas.Show;
+end;
+
+procedure TfrmPrincipal.ToolButton1Click(Sender: TObject);
+begin
+  AbreTelaVendas;
+end;
+
+procedure TfrmPrincipal.ToolButton3Click(Sender: TObject);
+begin
+  if not Assigned(frmAbreCaixas) then
+    frmAbreCaixas := TfrmAbreCaixas.Create(Self);
+  frmAbreCaixas.ShowModal;
+end;
+
+procedure TfrmPrincipal.Usurios1Click(Sender: TObject);
+begin
+  if fNivelUsuario(iGbCodUsuario) = 0 then
+    pCriarForm(TfrmUsuarios, frmUsuarios)
+  else
+    if application.MessageBox (msg11, aMsg, MB_OK + MB_ICONINFORMATION) = IDOK then
+end;
+
+procedure TfrmPrincipal.Vendas1Click(Sender: TObject);
+begin
+  if fNivelUsuario(iGbCodUsuario) = 0 then
+    pCriarForm(TfrmConsultaVendas, frmConsultaVendas)
+  else
+    if application.MessageBox (msg11, aMsg, MB_OK + MB_ICONINFORMATION) = IDOK then
+end;
+
+end.

@@ -1,0 +1,42 @@
+object dmPesqClientesVenda: TdmPesqClientesVenda
+  OldCreateOrder = False
+  Height = 221
+  Width = 495
+  object fdqryPesqClientesVendas: TFDQuery
+    Connection = dmPrincipal.conPizzaria
+    SQL.Strings = (
+      'select'
+      'id,'
+      'nome,'
+      'fone,'
+      'cel,'
+      'cidade,'
+      'bairro, '
+      'rua,'
+      'cep,'
+      'complemento,'
+      'numero,'
+      'ativo'
+      'from clientes'
+      'where fone =:pFone or cel =:pfone')
+    Left = 128
+    Top = 128
+    ParamData = <
+      item
+        Name = 'PFONE'
+        DataType = ftString
+        ParamType = ptInput
+        Value = Null
+      end>
+  end
+  object dsPesqClientesVendas: TDataSource
+    DataSet = fdqryPesqClientesVendas
+    Left = 304
+    Top = 128
+  end
+  object fdgxwtcrsr1: TFDGUIxWaitCursor
+    Provider = 'Forms'
+    Left = 232
+    Top = 24
+  end
+end

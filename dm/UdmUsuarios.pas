@@ -1,0 +1,53 @@
+unit UdmUsuarios;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, Data.DB, FireDAC.Stan.Intf,
+  FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
+  FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
+  FireDAC.UI.Intf, FireDAC.VCLUI.Wait, FireDAC.Comp.UI, FireDAC.Comp.DataSet,
+  FireDAC.Comp.Client;
+type
+  TdmUsuarios = class(TDataModule)
+    fdqryUsuarios: TFDQuery;
+    dsUsuarios: TDataSource;
+    fdqryLogin: TFDQuery;
+    fdgxwtcrsr1: TFDGUIxWaitCursor;
+    fdqryUsuariosid: TFDAutoIncField;
+    fdqryUsuariosnome: TStringField;
+    fdqryUsuariosusuario: TStringField;
+    fdqryUsuariossenha: TStringField;
+    fdqryUsuariosnivel: TIntegerField;
+    fdqryUsuariosativo: TIntegerField;
+    fdqPesqCaixaOperador: TFDQuery;
+    FDAutoIncField1: TFDAutoIncField;
+    StringField1: TStringField;
+    dsPesqCaixaOperador: TDataSource;
+    procedure fdqryUsuariosBeforePost(DataSet: TDataSet);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  dmUsuarios: TdmUsuarios;
+
+implementation
+
+{%CLASSGROUP 'Vcl.Controls.TControl'}
+
+uses uFuncoes, UdmPrincipal;
+
+{$R *.dfm}
+
+procedure TdmUsuarios.fdqryUsuariosBeforePost(DataSet: TDataSet);
+begin
+  if not(fCamposObrigatorios(Dataset)) then
+  begin
+    Abort;
+  end;
+end;
+
+end.

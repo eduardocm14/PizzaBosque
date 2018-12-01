@@ -1,0 +1,190 @@
+unit UfrmPesqClientesVenda;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Grids, UfrmPadrao,
+  Vcl.DBGrids, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Buttons, Vcl.Menus;
+
+type
+  TfrmPesqClientesVendas = class(TfrmPadrao)
+    pnlPesquisar: TPanel;
+    rgOpcao: TRadioGroup;
+    edtPesquisar: TEdit;
+    dbgrdClientes: TDBGrid;
+    btnLimpar: TButton;
+    pmIncluirAlterar: TPopupMenu;
+    Alterar1: TMenuItem;
+    N1: TMenuItem;
+    Incluir1: TMenuItem;
+    procedure FormCreate(Sender: TObject);
+    procedure rgOpcaoClick(Sender: TObject);
+    procedure edtPesquisarKeyPress(Sender: TObject; var Key: Char);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure FormDestroy(Sender: TObject);
+    procedure btnLimparClick(Sender: TObject);
+    procedure DadosCliente;
+    procedure dbgrdClientesDblClick(Sender: TObject);
+    procedure btnIncluirAlterarClick(Sender: TObject);
+    procedure Alterar1Click(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormShow(Sender: TObject);
+    procedure frmIncluirAlterar;
+    procedure Incluir1Click(Sender: TObject);
+    procedure dbgrdClientesKeyPress(Sender: TObject; var Key: Char);
+
+  private
+    { Private declarations }
+  public
+    oper : Integer;
+    { Public declarations }
+  end;
+
+var
+  frmPesqClientesVendas: TfrmPesqClientesVendas;
+
+implementation
+
+{$R *.dfm}
+
+uses UdmPesqClientesVenda, uFuncoes, UfrmVendas, UfrmClientes;
+
+procedure TfrmPesqClientesVendas.Alterar1Click(Sender: TObject);
+begin
+  inherited;
+  oper := 1; // Alterar
+  frmIncluirAlterar;
+end;
+
+procedure TfrmPesqClientesVendas.btnIncluirAlterarClick(Sender: TObject);
+begin
+  inherited;
+  try
+    pCriarForm(TfrmClientes, frmClientes);
+  finally
+    btnLimparClick(Self);
+  end;
+end;
+
+procedure TfrmPesqClientesVendas.btnLimparClick(Sender: TObject);
+begin
+  inherited;
+  edtPesquisar.Clear;
+  pPesqLocate(dmPesqClientesVenda.fdqryPesqClientesVendas, edtPesquisar, 'nome');
+  edtPesquisar.SetFocus;
+end;
+
+procedure TfrmPesqClientesVendas.dbgrdClientesDblClick(Sender: TObject);
+begin
+  inherited;
+  DadosCliente;
+end;
+
+procedure TfrmPesqClientesVendas.dbgrdClientesKeyPress(Sender: TObject;
+  var Key: Char);
+begin
+  inherited;
+  if Key = #13 then
+    DadosCliente;
+
+end;
+
+procedure TfrmPesqClientesVendas.edtPesquisarKeyPress(Sender: TObject;
+  var Key: Char);
+begin
+  inherited;
+  with dmPesqClientesVenda do
+  begin
+    case rgOpcao.ItemIndex of
+      0 : begin
+           edtPesquisar.NumbersOnly := False;
+           pPesqLocate(fdqryPesqClientesVendas, edtPesquisar, 'nome');
+          end;
+
+      1 : begin
+           edtPesquisar.NumbersOnly := True;
+           pPesqLocate(fdqryPesqClientesVendas, edtPesquisar, 'fone');
+          end;
+
+      2 : begin
+           edtPesquisar.NumbersOnly := True;
+           pPesqLocate(fdqryPesqClientesVendas, edtPesquisar, 'cel');
+          end;
+    end;
+  end;
+end;
+
+procedure TfrmPesqClientesVendas.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  inherited;
+  Action := caFree;
+  frmPesqClientesVendas := nil;
+end;
+
+procedure TfrmPesqClientesVendas.FormCloseQuery(Sender: TObject;
+  var CanClose: Boolean);
+begin
+  inherited;
+  dmPesqClientesVenda.fdqryPesqClientesVendas.Close;
+end;
+
+procedure TfrmPesqClientesVendas.FormCreate(Sender: TObject);
+begin
+  inherited;
+  if not Assigned(dmPesqClientesVenda) then
+    dmPesqClientesVenda := TdmPesqClientesVenda.Create(Self);
+  dmPesqClientesVenda.fdqryPesqClientesVendas.Open;
+end;
+
+procedure TfrmPesqClientesVendas.FormDestroy(Sender: TObject);
+begin
+  inherited;
+  FreeAndNil(dmPesqClientesVenda);
+end;
+
+procedure TfrmPesqClientesVendas.FormShow(Sender: TObject);
+begin
+  inherited;
+  oper := 0;
+end;
+
+procedure TfrmPesqClientesVendas.frmIncluirAlterar;
+begin
+  if not Assigned(frmIncluirAlterarClientes) then
+    frmIncluirAlterarClientes := TfrmIncluirAlterarClientes.Create(Self);
+    frmIncluirAlterarClientes.ShowModal;
+end;
+
+procedure TfrmPesqClientesVendas.Incluir1Click(Sender: TObject);
+begin
+  inherited;
+  oper := 2; // Incluir
+  frmIncluirAlterar;
+end;
+
+procedure TfrmPesqClientesVendas.DadosCliente;
+begin
+  iGbCodCliente := dmPesqClientesVenda.fdqryPesqClientesVendasid.AsInteger;
+ // frmVendas.mmoDadosCliente.Clear;
+ // frmVendas.mmoDadosCliente.Lines.Add('Cliente:'  + '(' + dmPesqClientesVenda.fdqryPesqClientesVendasid.AsString
+ //                                                 + ')' + dmPesqClientesVenda.fdqryPesqClientesVendasnome.AsString);
+ // frmVendas.mmoDadosCliente.Lines.Add('Fone:'     + dmPesqClientesVenda.fdqryPesqClientesVendasfone.AsString +
+ //                                     ' / Cel:'   + dmPesqClientesVenda.fdqryPesqClientesVendascel.AsString);
+ // frmVendas.mmoDadosCliente.Lines.Add('Cidade:'   + dmPesqClientesVenda.fdqryPesqClientesVendascidade.AsString);
+ // frmVendas.mmoDadosCliente.Lines.Add('Endereço:' + dmPesqClientesVenda.fdqryPesqClientesVendasendereco.AsString);
+ // frmVendas.btnPesqTiposPizza.Enabled := True;
+  frmVendas.btnPesqTiposPizza.SetFocus;
+  ModalResult := mrOk;
+end;
+
+procedure TfrmPesqClientesVendas.rgOpcaoClick(Sender: TObject);
+begin
+  inherited;
+  edtPesquisar.Clear;
+  pPesqLocate(dmPesqClientesVenda.fdqryPesqClientesVendas, edtPesquisar, 'nome');
+  edtPesquisar.SetFocus;
+end;
+
+end.

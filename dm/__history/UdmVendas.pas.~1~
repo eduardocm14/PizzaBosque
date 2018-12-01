@@ -1,0 +1,42 @@
+unit UdmVendas;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
+  FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, FireDAC.UI.Intf,
+  FireDAC.VCLUI.Wait, FireDAC.Comp.UI, Data.DB, FireDAC.Comp.DataSet,
+  FireDAC.Comp.Client;
+
+type
+  TdmVendas = class(TDataModule)
+    fdqVendas: TFDQuery;
+    dsVendas: TDataSource;
+    fdgxwtcrsr1: TFDGUIxWaitCursor;
+    fdqVendasid: TFDAutoIncField;
+    fdqVendascodusuario: TIntegerField;
+    fdqVendascodcliente: TIntegerField;
+    fdqVendascodentregador: TIntegerField;
+    fdqVendasdata: TDateTimeField;
+    fdqVendasstatus: TStringField;
+    fdqVendasnumcaixa: TIntegerField;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  dmVendas: TdmVendas;
+
+implementation
+
+uses
+  UdmPrincipal;
+
+{%CLASSGROUP 'Vcl.Controls.TControl'}
+
+{$R *.dfm}
+
+end.

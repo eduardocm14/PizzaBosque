@@ -1,0 +1,163 @@
+unit UfrmUsuarios;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Grids, UfrmPadrao,
+  Vcl.DBGrids, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Mask, Vcl.DBCtrls, Vcl.Menus;
+
+type
+  TfrmUsuarios = class(TfrmPadrao)
+    dbgrdUsuarios: TDBGrid;
+    pnlBtn: TPanel;
+    btnNovo: TButton;
+    btnAlterar: TButton;
+    btnCancelar: TButton;
+    btnSalvar: TButton;
+    pnlPesquisar: TPanel;
+    edtPesquisar: TEdit;
+    lblPesq: TLabel;
+    pnlCadastros: TPanel;
+    dbedtNome: TDBEdit;
+    dbedtUsuario: TDBEdit;
+    dbedtSenha: TDBEdit;
+    lbl1: TLabel;
+    lbl2: TLabel;
+    lbl3: TLabel;
+    dbrgNivel: TDBRadioGroup;
+    pmExcluir: TPopupMenu;
+    Exluir1: TMenuItem;
+    procedure FormCreate(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure FormDestroy(Sender: TObject);
+    procedure btnNovoClick(Sender: TObject);
+    procedure btnCancelarClick(Sender: TObject);
+    procedure btnSalvarClick(Sender: TObject);
+    procedure edtPesquisarKeyPress(Sender: TObject; var Key: Char);
+    procedure Exluir1Click(Sender: TObject);
+    procedure dbgrdUsuariosDblClick(Sender: TObject);
+    procedure btnAlterarClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmUsuarios: TfrmUsuarios;
+
+implementation
+
+{$R *.dfm}
+
+uses UdmUsuarios, uFuncoes, uMensagens;
+
+procedure TfrmUsuarios.btnAlterarClick(Sender: TObject);
+begin
+  inherited;
+  if dmUsuarios.fdqryUsuariosid.AsInteger > 1 then
+  begin
+    dmUsuarios.fdqryUsuarios.Edit;
+    pBtnCadastros(btnNovo, btnAlterar, btnCancelar, btnSalvar);
+    dbrgNivel.Enabled := True;
+    pDbEditCadastro(Self, dbedtNome);
+    dbgrdUsuarios.Enabled := False;
+    dbgrdUsuarios.Refresh;
+  end
+  else
+  begin
+    if Application.MessageBox('Usuário Administrador é padrão do sistema e não pode ser alterado!','Aatenção', MB_OK + MB_ICONWARNING)= IDOK then
+    begin
+      btnAlterar.SetFocus;
+    end;
+  end;
+end;
+
+procedure TfrmUsuarios.btnCancelarClick(Sender: TObject);
+begin
+  inherited;
+  dmUsuarios.fdqryUsuarios.Cancel;
+  pBtnCadastros(btnNovo, btnAlterar, btnCancelar, btnSalvar);
+  dbrgNivel.Enabled := False;
+  pDbEditCadastro(Self, dbedtNome);
+  dbgrdUsuarios.Enabled := True;
+  dbgrdUsuarios.Refresh;
+end;
+
+procedure TfrmUsuarios.btnNovoClick(Sender: TObject);
+begin
+  inherited;
+  dmUsuarios.fdqryUsuarios.Append;
+  pBtnCadastros(btnNovo, btnAlterar, btnCancelar, btnSalvar);
+  dbrgNivel.Enabled := True;
+  pDbEditCadastro(Self, dbedtNome);
+  dbgrdUsuarios.Enabled := False;
+  dbgrdUsuarios.Refresh;
+end;
+
+procedure TfrmUsuarios.btnSalvarClick(Sender: TObject);
+begin
+  inherited;
+  dmUsuarios.fdqryUsuarios.Post;
+  dmUsuarios.fdqryUsuarios.Refresh;
+  if application.MessageBox (msg3, cMsg, MB_OK + MB_ICONINFORMATION) = IDOK then
+  pBtnCadastros(btnNovo, btnAlterar, btnCancelar, btnSalvar);
+  dbrgNivel.Enabled := False;
+  pDbEditCadastro(Self, dbedtNome);
+  dbgrdUsuarios.Enabled := True;
+  dbgrdUsuarios.Refresh;
+end;
+
+procedure TfrmUsuarios.dbgrdUsuariosDblClick(Sender: TObject);
+begin
+  inherited;
+  if btnAlterar.CanFocus then
+    btnAlterarClick(Self);
+end;
+
+procedure TfrmUsuarios.edtPesquisarKeyPress(Sender: TObject; var Key: Char);
+begin
+  inherited;
+  pPesqLocate(dmUsuarios.fdqryUsuarios, edtPesquisar, 'nome');
+end;
+
+procedure TfrmUsuarios.Exluir1Click(Sender: TObject);
+begin
+  inherited;
+  if dmUsuarios.fdqryUsuariosid.AsInteger > 1 then
+  begin
+    if application.MessageBox(Pchar(msg4 + dmUsuarios.fdqryUsuariosnome.AsString), cMsg, MB_YESNO + MB_ICONINFORMATION) = IDYES then
+    begin
+      dmUsuarios.fdqryUsuarios.Delete;
+      dmUsuarios.fdqryUsuarios.Refresh;
+    end;
+  end
+  else
+  begin
+    if Application.MessageBox('Usuário Administrador é padrão do sistema e não pode ser excluído!', aMsg, MB_OK + MB_ICONWARNING)= IDOK then
+  end;
+end;
+
+procedure TfrmUsuarios.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+begin
+  inherited;
+  dmUsuarios.fdqryUsuarios.Close;
+end;
+
+procedure TfrmUsuarios.FormCreate(Sender: TObject);
+begin
+  inherited;
+
+  if not Assigned(dmUsuarios) then
+    dmUsuarios := TdmUsuarios.Create(Self);
+  dmUsuarios.fdqryUsuarios.Open;
+end;
+
+procedure TfrmUsuarios.FormDestroy(Sender: TObject);
+begin
+  inherited;
+  FreeAndNil(dmUsuarios);
+end;
+
+end.

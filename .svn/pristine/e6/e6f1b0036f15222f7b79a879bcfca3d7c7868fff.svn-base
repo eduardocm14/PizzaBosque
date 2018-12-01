@@ -1,0 +1,45 @@
+unit UdmPesqClientesVenda;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, Data.DB, FireDAC.Stan.Intf,
+  FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
+  FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
+  FireDAC.UI.Intf, FireDAC.VCLUI.Wait, FireDAC.Comp.UI, FireDAC.Comp.DataSet,
+  FireDAC.Comp.Client;
+
+type
+  TdmPesqClientesVenda = class(TDataModule)
+    fdqryPesqClientesVendas: TFDQuery;
+    dsPesqClientesVendas: TDataSource;
+    fdgxwtcrsr1: TFDGUIxWaitCursor;
+    fdqryPesqClientesVendasid: TFDAutoIncField;
+    fdqryPesqClientesVendasnome: TStringField;
+    fdqryPesqClientesVendasfone: TStringField;
+    fdqryPesqClientesVendascel: TStringField;
+    fdqryPesqClientesVendaspesqfone: TStringField;
+    fdqryPesqClientesVendascidade: TStringField;
+    fdqryPesqClientesVendasbairro: TStringField;
+    fdqryPesqClientesVendasrua: TStringField;
+    fdqryPesqClientesVendascep: TStringField;
+    fdqryPesqClientesVendascomplemento: TStringField;
+    fdqryPesqClientesVendasnumero: TIntegerField;
+    fdqryPesqClientesVendasativo: TStringField;
+
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  dmPesqClientesVenda: TdmPesqClientesVenda;
+
+implementation
+
+{%CLASSGROUP 'Vcl.Controls.TControl'}
+
+{$R *.dfm}
+
+end.

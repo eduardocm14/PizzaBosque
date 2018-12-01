@@ -1,0 +1,64 @@
+object dmEmpresa: TdmEmpresa
+  OldCreateOrder = False
+  Height = 211
+  Width = 397
+  object fdqryEmpresa: TFDQuery
+    Connection = dmPrincipal.conPizzaria
+    SQL.Strings = (
+      'select * from empresa')
+    Left = 80
+    Top = 48
+    object fdqryEmpresaid: TFDAutoIncField
+      FieldName = 'id'
+      Origin = 'id'
+      ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
+    end
+    object fdqryEmpresarazao: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'razao'
+      Origin = 'razao'
+      Size = 100
+    end
+    object fdqryEmpresafantasia: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'fantasia'
+      Origin = 'fantasia'
+      Size = 100
+    end
+    object fdqryEmpresacnpj: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'cnpj'
+      Origin = 'cnpj'
+      Size = 14
+    end
+    object fdqryEmpresaie: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'ie'
+      Origin = 'ie'
+      Size = 9
+    end
+    object fdqryEmpresafone1: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'fone1'
+      Origin = 'fone1'
+      Size = 10
+    end
+    object fdqryEmpresafone2: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'fone2'
+      Origin = 'fone2'
+      Size = 10
+    end
+  end
+  object dsEmpresa: TDataSource
+    DataSet = fdqryEmpresa
+    Left = 256
+    Top = 48
+  end
+  object fdgxwtcrsr1: TFDGUIxWaitCursor
+    Provider = 'Forms'
+    Left = 256
+    Top = 120
+  end
+end
